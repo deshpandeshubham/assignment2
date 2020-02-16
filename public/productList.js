@@ -1,1 +1,0 @@
-class ProductList extends React.Component {}
