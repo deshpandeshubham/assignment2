@@ -24,13 +24,12 @@ class ProductTable extends React.Component {
 class ProductRow extends React.Component {
     render() {
         const prd = this.props.product;
-        var imageURL = prd.productImage;
         return(
             <tr>
                 <td>{prd.productName}</td>
                 <td>${prd.productPrice}</td>
                 <td>{prd.productCategory}</td>
-                <td><a href={imageURL} target="_blank">View</a></td>
+                <td><a href={prd.productImage} target="_blank">View</a></td>
             </tr>
         )
     }

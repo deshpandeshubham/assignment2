@@ -18,9 +18,8 @@ class ProductTable extends React.Component {
 class ProductRow extends React.Component {
   render() {
     const prd = this.props.product;
-    var imageURL = prd.productImage;
     return React.createElement("tr", null, React.createElement("td", null, prd.productName), React.createElement("td", null, "$", prd.productPrice), React.createElement("td", null, prd.productCategory), React.createElement("td", null, React.createElement("a", {
-      href: imageURL,
+      href: prd.productImage,
       target: "_blank"
     }, "View")));
   }
