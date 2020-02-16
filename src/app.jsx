@@ -1,19 +1,20 @@
+const Products = [];
+
 class ProductTable extends React.Component {
     render() {
-        const rowStyle = {border: "1px solid silver", padding: 4, width: "25%"}
+        const productRows = this.props.products.map(product => <ProductRow key={product.id} product={product}/>);
         return (
-            <table style = {{borderCollapse: "collapse", width: 700}}>
+            <table className="borderedTable">
                 <thead align="left">
                     <tr>
-                        <th style={rowStyle}>Product Name</th>
-                        <th style={rowStyle}>Price</th>
-                        <th style={rowStyle}>Category</th>
-                        <th style={rowStyle}>Image</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Image</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <ProductRow rowStyle = {rowStyle} productName = "Jeans" productPrice = {1000} productCategory = "Clothing" productImage = "Img"/>
-                    <ProductRow rowStyle = {rowStyle} productName = "Guitar" productPrice = {2000} productCategory = "Music" productImage = "Img"/>
+                    {productRows}
                 </tbody>
             </table>
         )
@@ -22,46 +23,69 @@ class ProductTable extends React.Component {
 
 class ProductRow extends React.Component {
     render() {
+        const prd = this.props.product;
         return(
             <tr>
-                <td style = {this.props.rowStyle}>{this.props.productName}</td>
-                <td style = {this.props.rowStyle}>{this.props.productPrice}</td>
-                <td style = {this.props.rowStyle}>{this.props.productCategory}</td>
-                <td style = {this.props.rowStyle}>{this.props.productImage}</td>
+                <td>{prd.productName}</td>
+                <td>${prd.productPrice}</td>
+                <td>{prd.productCategory}</td>
+                <td>{prd.productImage}</td>
             </tr>
         )
     }
 }
 
 class AddProduct extends React.Component {
+    constructor() {
+        super();
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        const form = document.forms.productAdd;
+        var price = form.prdPrice.value;
+        price = price.slice(1);
+        const prd = {productName: form.prdName.value, productPrice: price, productCategory: form.prdCat.value, productImage: form.prdImg.value};
+        this.props.createProduct(prd);
+        form.prdName.value="";   
+        form.prdPrice.value="$";
+        form.prdImg.value="";
+    }
+
     render() {
         return (
             <div>
-                <form>
-                    <p>
-                        <label>Category<br/>
-                            <select id="prdCat">
+                <form name="productAdd" className="formAdd" onSubmit={this.handleSubmit}>
+                    <div>
+                        <p>
+                            <label>Category<br/>
+                            <select id="prdCat" name="category">
                                 <option value="shirts">Shirts</option>
                                 <option value="jeans">Jeans</option>
                                 <option value="jackets">Jackets</option>
                                 <option value="sweaters">Sweaters</option>
                                 <option value="accessories">Accessories</option>
-                            </select>
-                        </label>
-                    </p>
-                    <p>
-                        <label>Price Per Unit<br/> 
-                        <input type="text" name="prdPrice" value="$"/></label>
-                    </p>
-                    <p>
-                        <label>Product Name<br/> 
-                        <input type="text" name="prdName"/></label>
-                    </p>
-                    <p>
-                        <label>Image URL<br/> 
-                        <input type="text" name="prdImg"/></label>
-                    </p>
-                    <input type="submit" value="Add Product"></input>
+                            </select></label>
+                        </p>
+                        <p>
+                            <label>Price Per Unit<br/> 
+                            <input type="text" name="prdPrice" defaultValue="$"/></label>
+                        </p>
+                        <p>
+                            <input type="submit" id="btnAdd" value="Add Product"></input>
+                        </p>
+                    </div>
+                    <div>
+                        <p>
+                            <label>Product Name<br/> 
+                            <input type="text" name="prdName"/></label>
+                        </p>
+                        <p>
+                            <label>Image URL<br/> 
+                            <input type="text" name="prdImg"/></label>
+                        </p>
+                    </div>
                 </form>
             </div>
         )
@@ -69,16 +93,39 @@ class AddProduct extends React.Component {
 }
 
 class Product extends React.Component {
+    constructor() {
+        super();
+        this.state = {products:[]}
+        this.createProduct = this.createProduct.bind(this);
+    }
+
+    componentDidMount() {
+        this.loadData();
+    }
+    
+    loadData() {
+        setTimeout(() => {
+            this.setState({products:Products})
+        }, 500)
+    }
+
+    createProduct(product) {
+        product.id = this.state.products.length + 1;
+        const newProductList = this.state.products.slice();
+        newProductList.push(product);
+        this.setState({products:newProductList})
+    }
+
     render() {
         return (
             <div id="mainDiv">
                 <h1>My Company Inventory</h1>
                 <h3>Showing all availble products</h3>
                 <hr/><br/>
-                <ProductTable/>
+                <ProductTable products={this.state.products}/>
                 <h3>Add a new product to inventory</h3>
                 <hr/>
-                <AddProduct/>
+                <AddProduct createProduct={this.createProduct}/>
             </div>
         )
     }   
