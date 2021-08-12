@@ -59,7 +59,7 @@
     "pascalcase": "^0.1.1",
     "path-dirname": "^1.0.2",
     "path-is-absolute": "^1.0.1",
-    "path-parse": "^1.0.6",
+    "path-parse": "^1.0.7",
     "posix-character-classes": "^0.1.1",
     "process-nextick-args": "^2.0.1",
     "prop-types": "^15.7.2",
